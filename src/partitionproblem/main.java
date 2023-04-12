@@ -8,8 +8,8 @@ package partitionproblem;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import partitionproblem.solution.AEtoile;
-import partitionproblem.solution.DFSsolution;
+import solution.aveugle.AEtoile;
+import solution.aveugle.DFSsolution;
 
 /**
  *

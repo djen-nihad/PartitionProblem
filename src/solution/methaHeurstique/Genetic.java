@@ -6,6 +6,8 @@
 package solution.methaHeurstique;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.TreeSet;
@@ -18,16 +20,15 @@ public class Genetic {
     
     private final int maxIter;
     private final int sizePopulation;
-    private final int mutationRate;
-    private final int crossoverRate;
+    private final double mutationRate;
+    private final double crossoverRate;
 
-    public Genetic(int maxIter, int sizePopulation, int sizeProblem, int mutationRate, int crossoverRate) {
+    public Genetic(int maxIter, int sizePopulation, int sizeProblem, double mutationRate, double crossoverRate) {
         this.maxIter = maxIter;
         this.sizePopulation = sizePopulation;
         this.mutationRate = mutationRate;
         this.crossoverRate = crossoverRate;
     }
-    
     
     public static List<Individual> generatePopulation(List<Integer> ensemble, int sizePopulation){
         
@@ -51,54 +52,39 @@ public class Genetic {
         
     }
      
-    
-    public static List<Individual> crossover (List<Integer> ensemble, Individual parent1 , Individual parent2 , int crossoverType){        
-        int size;
-        boolean genesFromParent1;
-        Individual child1 , child2;
-        List<Individual> children;
-        NavigableSet<Integer> crossoverPoints = new TreeSet<>();
-        int crossoverPoint;
+    public static List<Individual> replace(List<Individual> population , List<Individual> children){
         
-        size = parent1.getGenes().size();
-        child1 = new Individual (ensemble, true);
-        child2 = new Individual (ensemble, true);
-        children = new ArrayList<Individual>();
+        int size = population.size();        
+        population.addAll(children);
+        // trie la liste du facon croissant
+        Collections.sort(population, new Comparator<Individual>(){
+            @Override
+            public int compare(Individual o1, Individual o2) {
+                 return o1.getFitness() - o2.getFitness();              
+            }                 
+        });
+        for ( int i = size; i < population.size(); i++)
+            population.remove(i);
         
-        // Générer des points de croisement uniques
-        while ( crossoverPoints.size() < crossoverType  )
-            crossoverPoints.add((int) (Math.random() * ( ( size - 1) - 1 ) ) );
-        
-        genesFromParent1 = true;
-        crossoverPoint = crossoverPoints.pollFirst();
-       
-        for ( int i = 0; i < size; i++ ){
-           if ( i == crossoverPoint && ! crossoverPoints.isEmpty() ) {
-               crossoverPoint = crossoverPoints.pollFirst();
-               genesFromParent1 = ! genesFromParent1;                
-           } 
-           if (genesFromParent1) {
-               child1.getGenes().add(parent1.getGenes().get(i));           
-               child2.getGenes().add(parent2.getGenes().get(i));
-           }
-           else {
-               child1.getGenes().add(parent2.getGenes().get(i));           
-               child2.getGenes().add(parent1.getGenes().get(i));
-           }            
-        }
-        child1.setFitness(child1.evaluat(ensemble));
-        child2.setFitness(child2.evaluat(ensemble)); 
-        children.add(child1);
-        children.add(child2);
-        return children;
+        return population;       
+    }
+
+    public int getMaxIter() {
+        return maxIter;
+    }
+
+    public int getSizePopulation() {
+        return sizePopulation;
+    }
+
+    public double getMutationRate() {
+        return mutationRate;
+    }
+
+    public double getCrossoverRate() {
+        return crossoverRate;
     }
     
-     
-   
     
-  
-   
 
-    
-    
 }

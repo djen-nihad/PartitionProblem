@@ -8,6 +8,8 @@ package solution.methaHeurstique;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 
 public class Individual {
@@ -24,6 +26,57 @@ public class Individual {
         } 
     }
 
+    public static List<Individual> crossover (List<Integer> ensemble, Individual parent1 , Individual parent2 , int crossoverType , double crossoverRate ){        
+       
+        if ( Math.random() < crossoverRate ) return null;
+        int size;
+        boolean genesFromParent1;
+        Individual child1 , child2;
+        List<Individual> children;
+        NavigableSet<Integer> crossoverPoints = new TreeSet<>();
+        int crossoverPoint;
+        
+        size = parent1.getGenes().size();
+        child1 = new Individual (ensemble, true);
+        child2 = new Individual (ensemble, true);
+        children = new ArrayList<Individual>();
+        
+        // Générer des points de croisement uniques
+        while ( crossoverPoints.size() < crossoverType  )
+            crossoverPoints.add((int) (Math.random() * ( ( size - 1) - 1 ) ) );
+        
+        genesFromParent1 = true;
+        crossoverPoint = crossoverPoints.pollFirst();
+       
+        for ( int i = 0; i < size; i++ ){
+           if ( i == crossoverPoint  ) {
+               if ( crossoverPoints.isEmpty() )  crossoverPoint = crossoverPoints.pollFirst();
+               genesFromParent1 = ! genesFromParent1;                
+           } 
+           if (genesFromParent1) {
+               child1.getGenes().add(parent1.getGenes().get(i));           
+               child2.getGenes().add(parent2.getGenes().get(i));
+           }
+           else {
+               child1.getGenes().add(parent2.getGenes().get(i));           
+               child2.getGenes().add(parent1.getGenes().get(i));
+           }            
+        }
+        child1.setFitness(child1.evaluat(ensemble));
+        child2.setFitness(child2.evaluat(ensemble)); 
+        children.add(child1);
+        children.add(child2);
+        return children;
+    }
+    
+    public  void mutate(double mutationRate, int pos){         
+        if ( Math.random() < mutationRate ) return;
+        int gene = this.getGenes().get(pos);
+        if ( gene == 1 ) gene = 2;
+        else gene = 1;
+        this.getGenes().set(pos, gene);         
+    }
+    
     public List<Integer> getGenes() {
         return genes;
     }

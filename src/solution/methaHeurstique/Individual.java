@@ -27,25 +27,21 @@ public class Individual {
     }
 
     public static List<Individual> crossover (List<Integer> ensemble, Individual parent1 , Individual parent2 , int crossoverType , double crossoverRate ){        
-       
-        
-        int size;
-        boolean genesFromParent1;
-        Individual child1 , child2;
-        List<Individual> newGeneration;
-        NavigableSet<Integer> crossoverPoints = new TreeSet<>();
-        int crossoverPoint;
-        
-        size = parent1.getGenes().size();
-        child1 = new Individual (ensemble, true);
-        child2 = new Individual (ensemble, true);
-        newGeneration = new ArrayList<Individual>();
-        
+        List<Individual> newGeneration = new ArrayList<Individual>();
         if ( Math.random() < crossoverRate ) {
             newGeneration.add(parent1);
             newGeneration.add(parent2);
             return newGeneration;
         }
+        int size , crossoverPoint;
+        boolean genesFromParent1;
+        Individual child1 , child2;
+        NavigableSet<Integer> crossoverPoints = new TreeSet<>();
+        
+        size = parent1.getGenes().size();
+        child1 = new Individual (ensemble, true);
+        child2 = new Individual (ensemble, true);
+        
         
         // Générer des points de croisement uniques
         while ( crossoverPoints.size() < crossoverType && crossoverPoints.size() < size  )
@@ -56,7 +52,7 @@ public class Individual {
        
         for ( int i = 0; i < size; i++ ){
            if ( i == crossoverPoint  ) {
-               if ( crossoverPoints.isEmpty() )  crossoverPoint = crossoverPoints.pollFirst();
+               if ( ! crossoverPoints.isEmpty() )  crossoverPoint = crossoverPoints.pollFirst();
                genesFromParent1 = ! genesFromParent1;                
            } 
            if (genesFromParent1) {
@@ -103,7 +99,7 @@ public class Individual {
         int rand;
         this.genes = new ArrayList<Integer>();
         for ( int i =0; i < size; i++){
-            rand =  (int) Math.random() * 2 + 1;
+            rand =  (int) (Math.round(Math.random() * (2 - 1)) + 1);
             this.genes.add(rand);
         }              
     }

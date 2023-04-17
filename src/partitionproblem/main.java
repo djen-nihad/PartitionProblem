@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import solution.aveugle.AEtoile;
 import solution.aveugle.DFSsolution;
+import solution.methaHeurstique.Genetic;
+import solution.methaHeurstique.Individual;
 
 /**
  *
@@ -19,22 +21,42 @@ public class main {
     
     public static void main(String[] args) {
         
-        long startTime , endTime ;
-        
+        long startTime , endTime ;        
         List<Integer> ensemble =  new ArrayList<>(Arrays.asList(184 , 8 ,202 , 14 , 46 , 2 , 280 , 272));
+        
+        Genetic solveWithGenetic = new Genetic(1500, 100 , 0.3 , 0.2);
+        Individual solutionG;
               
         Partition problem = new Partition();
-        AEtoile solution = new AEtoile();
+        DFSsolution solution = new DFSsolution();
+   
         
-        problem.generateInst(8);
+        problem.generateInst(1000);
         System.out.println("L'ensemble est  : ");
         problem.afficheEnsemble();
         
         startTime = System.currentTimeMillis(); 
                
-        solution.solve_Partition(problem);
-        
+       // solution.solve_Partition(problem);
+        solutionG = solveWithGenetic.GenticAlgorithm(problem);
         endTime = System.currentTimeMillis();
+        
+         System.out.println(" Genetic :  ");
+        problem.afficheSolution(solutionG.getGenes());
+        System.out.println(" \n fitness : " + solutionG.getFitness());
+        
+        System.out.println("\n  Aveugle :  ");
+        
+      //  solution.solve_Partition(problem , 0);
+     //   problem.afficheSolution(problem.getSolution().get(0));
+     //   System.out.println(" \n fitness : " + problem.difference);
+        
+     
+     
+        
+        
+        
+        /**
         
         if ( problem.getSolution().isEmpty() ) 
             System.out.println(" Aucun solution trouve !  ");
@@ -54,7 +76,7 @@ public class main {
             }
                 
             
-            
+            **/
             
             
              
@@ -74,4 +96,3 @@ public class main {
    
     
     
-}

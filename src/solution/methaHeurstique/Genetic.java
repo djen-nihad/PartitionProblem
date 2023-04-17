@@ -30,6 +30,8 @@ public class Genetic {
         this.crossoverRate = crossoverRate;
     }
     
+    
+    
     public static List<Individual> generatePopulation(List<Integer> ensemble, int sizePopulation){
         
         List<Individual> population = new ArrayList<Individual>();

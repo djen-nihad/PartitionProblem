@@ -28,21 +28,27 @@ public class Individual {
 
     public static List<Individual> crossover (List<Integer> ensemble, Individual parent1 , Individual parent2 , int crossoverType , double crossoverRate ){        
        
-        if ( Math.random() < crossoverRate ) return null;
+        
         int size;
         boolean genesFromParent1;
         Individual child1 , child2;
-        List<Individual> children;
+        List<Individual> newGeneration;
         NavigableSet<Integer> crossoverPoints = new TreeSet<>();
         int crossoverPoint;
         
         size = parent1.getGenes().size();
         child1 = new Individual (ensemble, true);
         child2 = new Individual (ensemble, true);
-        children = new ArrayList<Individual>();
+        newGeneration = new ArrayList<Individual>();
+        
+        if ( Math.random() < crossoverRate ) {
+            newGeneration.add(parent1);
+            newGeneration.add(parent2);
+            return newGeneration;
+        }
         
         // Générer des points de croisement uniques
-        while ( crossoverPoints.size() < crossoverType  )
+        while ( crossoverPoints.size() < crossoverType && crossoverPoints.size() < size  )
             crossoverPoints.add((int) (Math.random() * ( ( size - 1) - 1 ) ) );
         
         genesFromParent1 = true;
@@ -64,9 +70,9 @@ public class Individual {
         }
         child1.setFitness(child1.evaluat(ensemble));
         child2.setFitness(child2.evaluat(ensemble)); 
-        children.add(child1);
-        children.add(child2);
-        return children;
+        newGeneration.add(child1);
+        newGeneration.add(child2);
+        return newGeneration;
     }
     
     public  void mutate(double mutationRate, int pos){         

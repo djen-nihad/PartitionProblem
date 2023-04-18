@@ -18,17 +18,20 @@ public class Individual {
     private int fitness;    
     
     public Individual(List<Integer> ensemble, boolean empty) {
+        //empty un booléen indiquant si l'objet "Individual" doit être initialisé avec une solution vide.
         if (empty) this.genes = new ArrayList<Integer>();
         else {
            int size = ensemble.size(); 
+           // Génération d'une solution aléatoire
            this.generateSolution(size);
+           // Évaluation de la solution
            this.fitness = this.evaluat(ensemble); 
         } 
     }
 
     public static List<Individual> crossover (List<Integer> ensemble, Individual parent1 , Individual parent2 , int crossoverType , double crossoverRate ){        
         List<Individual> newGeneration = new ArrayList<Individual>();
-        if ( Math.random() < crossoverRate ) {
+        if ( crossoverRate < Math.random() ) {
             newGeneration.add(parent1);
             newGeneration.add(parent2);
             return newGeneration;
@@ -39,6 +42,7 @@ public class Individual {
         NavigableSet<Integer> crossoverPoints = new TreeSet<>();
         
         size = parent1.getGenes().size();
+        // creer des individu  avec des solution vide 
         child1 = new Individual (ensemble, true);
         child2 = new Individual (ensemble, true);
         
@@ -49,8 +53,9 @@ public class Individual {
         
         genesFromParent1 = true;
         crossoverPoint = crossoverPoints.pollFirst();
-       
+       // Parcourir les gènes des parents et créer les enfants en utilisant les points de croisement
         for ( int i = 0; i < size; i++ ){
+            // Si on atteint le point de croisement, on passe au parent suivant et on génère un nouveau point de croisement si il existe
            if ( i == crossoverPoint  ) {
                if ( ! crossoverPoints.isEmpty() )  crossoverPoint = crossoverPoints.pollFirst();
                genesFromParent1 = ! genesFromParent1;                
@@ -59,11 +64,13 @@ public class Individual {
                child1.getGenes().add(parent1.getGenes().get(i));           
                child2.getGenes().add(parent2.getGenes().get(i));
            }
+           // Sinon, les gènes proviennent du parent 2
            else {
                child1.getGenes().add(parent2.getGenes().get(i));           
                child2.getGenes().add(parent1.getGenes().get(i));
            }            
         }
+        // Évaluer les enfants et les ajouter à la nouvelle génération
         child1.setFitness(child1.evaluat(ensemble));
         child2.setFitness(child2.evaluat(ensemble)); 
         newGeneration.add(child1);
@@ -72,10 +79,13 @@ public class Individual {
     }
     
     public  void mutate(double mutationRate, int pos){         
-        if ( Math.random() < mutationRate ) return;
+        if ( mutationRate < Math.random() ) return;
+        // Obtient le gène à la position donnée
         int gene = this.getGenes().get(pos);
+        // myter le gene
         if ( gene == 1 ) gene = 2;
         else gene = 1;
+        // Met à jour le gène à la position donnée avec le nouveau gène muté
         this.getGenes().set(pos, gene);         
     }
     

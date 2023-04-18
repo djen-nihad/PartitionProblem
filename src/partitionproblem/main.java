@@ -31,7 +31,7 @@ public class main {
         DFSsolution solution = new DFSsolution();
    
         
-        problem.generateInst(1000);
+        problem.generateInst(1000000);
         System.out.println("L'ensemble est  : ");
         problem.afficheEnsemble();
         
@@ -41,16 +41,20 @@ public class main {
         solutionG = solveWithGenetic.GenticAlgorithm(problem);
         endTime = System.currentTimeMillis();
         
-         System.out.println(" Genetic :  ");
+        System.out.println(" Genetic :  ");
         problem.afficheSolution(solutionG.getGenes());
         System.out.println(" \n fitness : " + solutionG.getFitness());
+        System.out.println(" Temps d'exeution est : " + (endTime - startTime) + "ms");
         
         System.out.println("\n  Aveugle :  ");
         
-      //  solution.solve_Partition(problem , 0);
-     //   problem.afficheSolution(problem.getSolution().get(0));
-     //   System.out.println(" \n fitness : " + problem.difference);
         
+        startTime = System.currentTimeMillis(); 
+       // solution.solve_Partition(problem , 0);
+        endTime = System.currentTimeMillis();
+      //  problem.afficheSolution(problem.getSolution().get(0));
+     //   System.out.println(" \n fitness : " + problem.difference);
+     //   System.out.println(" Temps d'exeution est : " + (endTime - startTime) + "ms");
      
      
         
